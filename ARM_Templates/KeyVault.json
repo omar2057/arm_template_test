@@ -67,7 +67,12 @@
                         "tenantId": "[subscription().tenantId]",
                         "objectId": "[parameters('pipelineServicePrincipalId')]",
                         "permissions": {
-                            "keys": [],
+                            "keys": [
+                                "get",
+                                "list",
+                                "update",
+                                "delete"
+                            ],
                             "secrets": [
                                 "get",
                                 "list",
