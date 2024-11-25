@@ -44,7 +44,7 @@
         },
         "pipelineServicePrincipalId": {
             "type": "string",
-            "defaultValue": "eb74d8aa-cedf-44d2-a495-a7bd6a9301eb"
+            "defaultValue": "a4924200-2523-46cf-a092-0479ad3fe852"
         }
     },
     "variables": {
