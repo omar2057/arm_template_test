@@ -38,7 +38,7 @@ stages:
           - task: AzureCLI@2
             displayName: Deploy Storage Account ARM Template
             inputs:
-              azureSubscription: "Azure Trainings New"
+              azureSubscription: "Arroyo_Challenge-Test_Omar"
               scriptType: bash
               scriptLocation: inlineScript
               inlineScript: |
@@ -51,7 +51,7 @@ stages:
           - task: AzureCLI@2
             displayName: Deploy Key Vault ARM Template
             inputs:
-              azureSubscription: "Azure Trainings New"
+              azureSubscription: "Arroyo_Challenge-Test_Omar"
               scriptType: bash
               scriptLocation: inlineScript
               inlineScript: |
