@@ -26,7 +26,7 @@ stages:
           - script: |
               # Set environment based on the branch name
               if [[ $(BRANCH_NAME) == "main" ]]; then
-                echo "##vso[task.setvariable variable=ENVIRONMENT]prd"
+                echo "##vso[task.setvariable variable=ENVIRONMENT]prod"
               elif [[ $(BRANCH_NAME) == release/* ]]; then
                 echo "##vso[task.setvariable variable=ENVIRONMENT]test"
               elif [[ $(BRANCH_NAME) == feature/* ]]; then
