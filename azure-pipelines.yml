@@ -1,0 +1,75 @@
+trigger:
+  branches:
+    include:
+      - master
+      - release/**
+      - feature/**
+
+variables:
+  RESOURCE_GROUP: "OmarLucia-RG"
+  STORAGE_ACCOUNT_NAME: "OmarLucia-RG"
+
+stages:
+  - stage: Deploy
+    displayName: Deploy ARM Templates and Configure Secrets
+    jobs:
+      - job: DeployResources
+        displayName: Deploy Resources to Azure
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          # 1. Determine the environment based on branch
+          - script: |
+              if [[ "$(System.PullRequest.SourceBranch)" == "refs/heads/master" ]]; then
+                echo "##vso[task.setvariable variable=ENVIRONMENT]prd"
+              elif [[ "$(System.PullRequest.SourceBranch)" =~ ^refs/heads/release/.* ]]; then
+                echo "##vso[task.setvariable variable=ENVIRONMENT]test"
+              elif [[ "$(System.PullRequest.SourceBranch)" =~ ^refs/heads/feature/.* ]]; then
+                echo "##vso[task.setvariable variable=ENVIRONMENT]dev"
+              else
+                echo "Branch not recognized for deployment"
+                exit 1
+              fi
+            displayName: Determine Environment
+          - script: echo "Deploying to $(ENVIRONMENT) environment"
+            displayName: Show Environment
+
+          # 2. Deploy Storage Account ARM Template
+          - task: AzureCLI@2
+            displayName: Deploy Storage Account ARM Template
+            inputs:
+              azureSubscription: "Azure Trainings New"
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                az deployment group create \
+                  --resource-group $(RESOURCE_GROUP) \
+                  --template-file ARM_Templates/StorageAccount.json \
+                  --parameters name=saomarlucia$(ENVIRONMENT)
+
+          # 3. Deploy Key Vault ARM Template
+          - task: AzureCLI@2
+            displayName: Deploy Key Vault ARM Template
+            inputs:
+              azureSubscription: "Azure Trainings New"
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                az deployment group create \
+                  --resource-group $(RESOURCE_GROUP) \
+                  --template-file ARM_Templates/KeyVault.json \
+                  --parameters name=kvomarlucia-$(ENVIRONMENT)
+
+          # 4. Get Connection String
+          - task: Bash@3
+            displayName: Get Connection String
+            inputs:
+              filePath: Scripts/getSAConnetionString.sh
+              arguments: "saomarlucia$(ENVIRONMENT)"
+
+          # 5. Create Secret if not exist
+          - task: Bash@3
+            displayName: Store Connection String in Key Vault
+            inputs:
+              filePath: Scripts/createSecret.sh
+              arguments: "kvomarlucia-$(ENVIRONMENT) mystorage-secret-$(ENVIRONMENT) '$(CONNECTION_STRING)'"

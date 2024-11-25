@@ -1,0 +1,65 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+    "parameters": {
+        "environment": {
+            "type": "string",
+            "allowedValues": [
+                "dev",
+                "test",
+                "prod"
+            ],
+            "metadata": {
+                "description": "The environment where the Key Vault will be deployed."
+            }
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "EastUS",
+            "allowedValues": [
+                "EastUS",
+                "WestUS",
+                "CentralUS"
+            ],
+            "metadata": {
+                "description": "Location of the Key Vault."
+            }
+        },
+        "keyVaultName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the Key Vault (must be globally unique)."
+            }
+        },
+        "sku": {
+            "type": "string",
+            "defaultValue": "Standard",
+            "allowedValues": [
+                "Standard",
+                "Premium"
+            ],
+            "metadata": {
+                "description": "SKU of the Key Vault."
+            }
+        }
+    },
+    "variables": {
+        "keyVaultResourceName": "[concat(parameters('keyVaultName'), '-', parameters('environment'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.KeyVault/vaults",
+            "apiVersion": "2021-10-01",
+            "name": "[variables('keyVaultResourceName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "sku": {
+                    "family": "A",
+                    "name": "[parameters('sku')]"
+                },
+                "tenantId": "[subscription().tenantId]",
+                "accessPolicies": []
+            }
+        }
+    ]
+}

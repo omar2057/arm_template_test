@@ -1,20 +1,52 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# Reto tecnico
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+This repository have the nessesary files to complete the technical challenge described here [Test_Omar.wiki/350/Reto-Tecnico](https://dev.azure.com/ArroyoTechTesting/Test_Omar/_wiki/wikis/Test_Omar.wiki/350/Reto-Tecnico)
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+## ARM templates
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+## Terraform
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+## log
+
+- download az cli in computer to test and login - az login
+```
+You have logged in. Now let us find all the subscriptions to which you have access...
+[
+  {
+    "cloudName": "AzureCloud",
+    "id": "***",
+    "isDefault": true,
+    "name": "Azure Trainings New",
+    "state": "Enabled",
+    "tenantId": "***",
+    "user": {
+      "name": "DevopsTest.Nov04@***",
+      "type": "user"
+    }
+  }
+]
+```
+
+- read about RG (resource group) and azure suscriptions.
+
+- find azure suscription - find it [here](https://portal.azure.com/#view/Microsoft_Azure_Billing/SubscriptionsBladeV2)
+
+- Create one resourse group using manually. [OmarLucia-RG](https://portal.azure.com/#@arroyoconsulting.net/resource/subscriptions/a4924200-2523-46cf-a092-0479ad3fe852/resourceGroups/OmarLucia-RG/overview)
+
+- read about arm templates
+
+- Basic template for azure storage account: [template](https://github.com/Azure/azure-quickstart-templates/blob/master/quickstarts/microsoft.storage/storage-account-create/azuredeploy.json) - modifying to use multienv
+
+- issues with az deployment group, az cli have not recent version, 2.2 at least need it
+
+- create ARM templates for Storage Account and KeyVult
+
+- Create script to get ConnectionsString and set new secret
+
+- Deploy resources with ARM templates
+
+- Set new permission to be able to create new secret.
+
+- Run create script.
+
+
