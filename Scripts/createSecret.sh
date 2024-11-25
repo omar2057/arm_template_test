@@ -7,6 +7,11 @@ KEYVAULT_NAME="$1"
 SECRET_NAME="$2"
 CONNECTION_STRING="$3"
 
+
+echo $KEYVAULT_NAME
+echo $SECRET_NAME
+echo $CONNECTION_STRING
+
 # Validation
 if [[ -z "$KEYVAULT_NAME" || -z "$SECRET_NAME" || -z "$CONNECTION_STRING" ]]; then
   echo "Missing parameters. Usage: $0 <keyVaultName> <secretName> <connectionString>"
