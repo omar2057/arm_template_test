@@ -1,6 +1,6 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-  "contentVersion": "1.0.0.0",
+    "contentVersion": "1.0.0.0",
     "parameters": {
         "environment": {
             "type": "string",
@@ -41,6 +41,10 @@
             "metadata": {
                 "description": "SKU of the Key Vault."
             }
+        },
+        "pipelineServicePrincipalId": {
+            "type": "string",
+            "defaultValue": "6213b9cb-56d3-415a-8708-f548cabbbb0a"
         }
     },
     "variables": {
@@ -58,7 +62,28 @@
                     "name": "[parameters('sku')]"
                 },
                 "tenantId": "[subscription().tenantId]",
-                "accessPolicies": []
+                "accessPolicies": [
+                    {
+                        "tenantId": "[subscription().tenantId]",
+                        "objectId": "[parameters('pipelineServicePrincipalId')]",
+                        "permissions": {
+                            "keys": [
+                                "get",
+                                "list",
+                                "update",
+                                "delete",
+                                "create"
+                            ],
+                            "secrets": [
+                                "get",
+                                "list",
+                                "set",
+                                "delete"
+                            ],
+                            "certificates": []
+                        }
+                    }
+                ]
             }
         }
     ]
