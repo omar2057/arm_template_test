@@ -8,6 +8,7 @@ trigger:
 variables:
   RESOURCE_GROUP: "OmarLucia-RG"
   STORAGE_ACCOUNT_NAME: "OmarLucia-RG"
+  BRANCH_NAME: $[replace(variables['Build.SourceBranch'], 'refs/heads/', '')]
 
 stages:
   - stage: Deploy
@@ -20,16 +21,18 @@ stages:
         steps:
           # 1. Determine the environment based on branch
           - script: |
-              if [[ "$(System.PullRequest.SourceBranch)" == "refs/heads/master" ]]; then
-                echo "##vso[task.setvariable variable=ENVIRONMENT]prd"
-              elif [[ "$(System.PullRequest.SourceBranch)" =~ ^refs/heads/release/.* ]]; then
-                echo "##vso[task.setvariable variable=ENVIRONMENT]test"
-              elif [[ "$(System.PullRequest.SourceBranch)" =~ ^refs/heads/feature/.* ]]; then
-                echo "##vso[task.setvariable variable=ENVIRONMENT]dev"
+              # Set environment based on the branch name
+              if [[ $(BRANCH_NAME) == "master" ]]; then
+                ENVIRONMENT="prd"
+              elif [[ $(BRANCH_NAME) == release/* ]]; then
+                ENVIRONMENT="test"
+              elif [[ $(BRANCH_NAME) == feature/* ]]; then
+                ENVIRONMENT="dev"
               else
-                echo "Branch not recognized for deployment"
+                echo "Unknown branch: $(BRANCH_NAME)"
                 exit 1
               fi
+              echo "Deploying to environment: $ENVIRONMENT"
             displayName: Determine Environment
           - script: echo "Deploying to $(ENVIRONMENT) environment"
             displayName: Show Environment
