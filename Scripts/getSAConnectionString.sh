@@ -21,7 +21,7 @@ CONNECTION_STRING_TEXT=$(az storage account show-connection-string \
     --name "$STORAGE_ACCOUNT_NAME" \
     --query "connectionString" -o tsv)
 
-if [[ -z "$CONNECTION_STRING" ]]; then
+if [[ -z "$CONNECTION_STRING_TEXT" ]]; then
     echo "Error: Storage Account not found."
     exit 1
 fi
