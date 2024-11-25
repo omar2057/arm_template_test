@@ -41,6 +41,10 @@
             "metadata": {
                 "description": "SKU of the Key Vault."
             }
+        },
+        "pipelineServicePrincipalId": {
+            "type": "string",
+            "defaultValue": "ArroyoTechTesting-CodeChallenge_Intermediate-a4924200-2523-46cf-a092-0479ad3fe852"
         }
     },
     "variables": {
@@ -61,7 +65,7 @@
                 "accessPolicies": [
                     {
                         "tenantId": "[subscription().tenantId]",
-                        "objectId": "['a4924200-2523-46cf-a092-0479ad3fe852']",
+                        "objectId": "[parameters('pipelineServicePrincipalId')]",
                         "permissions": {
                             "keys": [
                                 "get",
