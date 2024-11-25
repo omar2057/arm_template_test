@@ -49,7 +49,7 @@ stages:
               scriptLocation: inlineScript
               inlineScript: |
                 az deployment group create \
-                  --name $(DEPLOYMENT_NAME)
+                  --name $(DEPLOYMENT_NAME) \
                   --resource-group $(RESOURCE_GROUP) \
                   --template-file ARM_Templates/StorageAccount.json \
                   --parameters environment="$ENVIRONMENT" location="$LOCATION" storageAccountName=sa$(RESOURCES_NAMES)
@@ -63,7 +63,7 @@ stages:
               scriptLocation: inlineScript
               inlineScript: |
                 az deployment group create \
-                  --name $(DEPLOYMENT_NAME)
+                  --name $(DEPLOYMENT_NAME) \
                   --resource-group $(RESOURCE_GROUP) \
                   --template-file ARM_Templates/KeyVault.json \
                   --parameters environment="$ENVIRONMENT" location="$LOCATION" keyVaultName="kv$(RESOURCES_NAMES)" sku="Standard_LRS"
