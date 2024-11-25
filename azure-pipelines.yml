@@ -69,22 +69,21 @@ stages:
                   --parameters environment="$ENVIRONMENT" location="$LOCATION" keyVaultName="kv$(RESOURCES_NAMES)" sku="Standard"
 
           # 4. Get Connection String
-          - task: Bash@3
+          - task: AzureCLI@2
             displayName: Get Connection String
             inputs:
               azureSubscription: "Arroyo_Challenge-Test_Omar"
               scriptType: bash
               scriptLocation: inlineScript
               inlineScript: |
-                bash Scripts/getSAConnectionString.sh "sa(RESOURCES_NAMES)$(ENVIRONMENT)"
+                bash $(System.DefaultWorkingDirectory)/Scripts/getSAConnectionString.sh "sa(RESOURCES_NAMES)$(ENVIRONMENT)"
                 echo "##vso[task.setvariable variable=CONNECTION_STRING;]$CONNECTION_STRING"
 
           # 5. Create Secret if not exist
-          - task: Bash@3
+          - task: AzureCLI@2
             displayName: Store Connection String in Key Vault
             inputs:
               azureSubscription: "Arroyo_Challenge-Test_Omar"
               scriptType: bash
-              scriptLocation: inlineScript
-              inlineScript: |
-                bash Scripts/createSecret.sh "kv$(RESOURCES_NAMES)-$(ENVIRONMENT) sa-$(RESOURCES_NAMES)-secret-$(ENVIRONMENT) '$(CONNECTION_STRING)'"
+              filePath: $(System.DefaultWorkingDirectory)/Scripts/createSecret.sh
+              arguments: "kv$(RESOURCES_NAMES)-$(ENVIRONMENT) sa-$(RESOURCES_NAMES)-secret-$(ENVIRONMENT) '$(CONNECTION_STRING)'"
