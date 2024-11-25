@@ -1,6 +1,6 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-  "contentVersion": "1.0.0.0",
+    "contentVersion": "1.0.0.0",
     "parameters": {
         "environment": {
             "type": "string",
@@ -58,7 +58,27 @@
                     "name": "[parameters('sku')]"
                 },
                 "tenantId": "[subscription().tenantId]",
-                "accessPolicies": []
+                "accessPolicies": [
+                    {
+                        "tenantId": "[subscription().tenantId]",
+                        "objectId": "[a4924200-2523-46cf-a092-0479ad3fe852]",
+                        "permissions": {
+                            "keys": [
+                                "get",
+                                "list",
+                                "set",
+                                "delete"
+                            ],
+                            "secrets": [
+                                "get",
+                                "list",
+                                "set",
+                                "delete"
+                            ],
+                            "certificates": []
+                        }
+                    }
+                ]
             }
         }
     ]
