@@ -49,4 +49,6 @@ You have logged in. Now let us find all the subscriptions to which you have acce
 
 - Run create script.
 
+- Getting principal id for azure susbcription to use in pipeline -  ArroyoTechTesting-CodeChallenge_Intermediate-a4924200-2523-46cf-a092-0479ad3fe852 - enterprise application
+
 

@@ -6,8 +6,12 @@ trigger:
       - feature/**
 
 variables:
+  DEPLOYMENT_NAME: $(Build.BuildId)
+  LOCATION: EastUS
   RESOURCE_GROUP: "OmarLucia-RG"
+  RESOURCES_NAMES: "omarlucia"
   STORAGE_ACCOUNT_NAME: "OmarLucia-RG"
+  BRANCH_NAME: $[replace(variables['Build.SourceBranch'], 'refs/heads/', '')]
 
 stages:
   - stage: Deploy
@@ -20,16 +24,18 @@ stages:
         steps:
           # 1. Determine the environment based on branch
           - script: |
-              if [[ "$(System.PullRequest.SourceBranch)" == "refs/heads/master" ]]; then
+              # Set environment based on the branch name
+              if [[ $(BRANCH_NAME) == "master" ]]; then
                 echo "##vso[task.setvariable variable=ENVIRONMENT]prd"
-              elif [[ "$(System.PullRequest.SourceBranch)" =~ ^refs/heads/release/.* ]]; then
+              elif [[ $(BRANCH_NAME) == release/* ]]; then
                 echo "##vso[task.setvariable variable=ENVIRONMENT]test"
-              elif [[ "$(System.PullRequest.SourceBranch)" =~ ^refs/heads/feature/.* ]]; then
+              elif [[ $(BRANCH_NAME) == feature/* ]]; then
                 echo "##vso[task.setvariable variable=ENVIRONMENT]dev"
               else
-                echo "Branch not recognized for deployment"
+                echo "Unknown branch: $(BRANCH_NAME)"
                 exit 1
               fi
+              echo "Deploying to environment: $ENVIRONMENT"
             displayName: Determine Environment
           - script: echo "Deploying to $(ENVIRONMENT) environment"
             displayName: Show Environment
@@ -43,9 +49,10 @@ stages:
               scriptLocation: inlineScript
               inlineScript: |
                 az deployment group create \
+                  --name $(DEPLOYMENT_NAME) \
                   --resource-group $(RESOURCE_GROUP) \
                   --template-file ARM_Templates/StorageAccount.json \
-                  --parameters name=saomarlucia$(ENVIRONMENT)
+                  --parameters environment="$ENVIRONMENT" location="$LOCATION" storageAccountName=sa$(RESOURCES_NAMES)
 
           # 3. Deploy Key Vault ARM Template
           - task: AzureCLI@2
@@ -56,20 +63,28 @@ stages:
               scriptLocation: inlineScript
               inlineScript: |
                 az deployment group create \
+                  --name $(DEPLOYMENT_NAME) \
                   --resource-group $(RESOURCE_GROUP) \
                   --template-file ARM_Templates/KeyVault.json \
-                  --parameters name=kvomarlucia-$(ENVIRONMENT)
+                  --parameters environment="$ENVIRONMENT" location="$LOCATION" keyVaultName="kv$(RESOURCES_NAMES)" sku="Standard"
 
           # 4. Get Connection String
-          - task: Bash@3
-            displayName: Get Connection String
+          - task: AzureCLI@2
+            displayName: Get Storage Account Connection String
             inputs:
-              filePath: Scripts/getSAConnetionString.sh
-              arguments: "saomarlucia$(ENVIRONMENT)"
+              azureSubscription: "Arroyo_Challenge-Test_Omar"
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                bash $(System.DefaultWorkingDirectory)/Scripts/getSAConnectionString.sh "sa$(RESOURCES_NAMES)$(ENVIRONMENT)"
 
           # 5. Create Secret if not exist
-          - task: Bash@3
+          - task: AzureCLI@2
             displayName: Store Connection String in Key Vault
             inputs:
-              filePath: Scripts/createSecret.sh
-              arguments: "kvomarlucia-$(ENVIRONMENT) mystorage-secret-$(ENVIRONMENT) '$(CONNECTION_STRING)'"
+              azureSubscription: "Arroyo_Challenge-Test_Omar"
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                echo $(CONNECTION_STRING)
+                bash $(System.DefaultWorkingDirectory)/Scripts/createSecret.sh kv$(RESOURCES_NAMES)-$(ENVIRONMENT) sa-$(RESOURCES_NAMES)-secret-$(ENVIRONMENT) $(CONNECTION_STRING)

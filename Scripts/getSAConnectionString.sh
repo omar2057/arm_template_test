@@ -16,16 +16,14 @@ fi
 
 # Getting connection string
 echo "Getting Connection String for Storage Account '$STORAGE_ACCOUNT_NAME' in RG '$RESOURCE_GROUP'..."
-CONNECTION_STRING=$(az storage account show-connection-string \
+CONNECTION_STRING_TEXT=$(az storage account show-connection-string \
     --resource-group "$RESOURCE_GROUP" \
     --name "$STORAGE_ACCOUNT_NAME" \
     --query "connectionString" -o tsv)
 
-if [[ -z "$CONNECTION_STRING" ]]; then
+if [[ -z "$CONNECTION_STRING_TEXT" ]]; then
     echo "Error: Storage Account not found."
     exit 1
 fi
 
-# Display connection string
-echo "Connection String:"
-echo "$CONNECTION_STRING"
+echo "##vso[task.setvariable variable=CONNECTION_STRING;issecret=true]'$CONNECTION_STRING_TEXT'"
