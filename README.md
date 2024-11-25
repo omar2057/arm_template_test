@@ -49,4 +49,6 @@ You have logged in. Now let us find all the subscriptions to which you have acce
 
 - Run create script.
 
+- Gettiing principal id for azure susbcription to use in pipeline
+
 
