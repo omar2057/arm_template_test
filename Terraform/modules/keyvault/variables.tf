@@ -15,11 +15,11 @@ variable "location" {
 variable "prefix" {
   description = "Prefix for all terraform resources"
   type        = string
-  default = "tf"
+  default = "terraform"
 }
 
 variable "resources_name" {
-  description = "Storage account name"
+  description = "name for all terraform resources"
   type        = string
   default = "omarlucia"
 }
@@ -30,21 +30,16 @@ variable "environment" {
   type        = string
 }
 
-## Storage account variables
-variable "account_tier" {
-  
-}
-variable "account_replication_type" {
-  
-}
 
-## KeyVault variables
+# KeyVault variables
 variable "sku_name" {
   
 }
 
+variable "secret_connection_string_sa" {
+  
+}
+
 variable "object_id" {
-  description = "The object ID of a user, service principal or security group in the Azure Active Directory tenant for the vault." # Need to change
-  type = string
   
 }
