@@ -26,4 +26,4 @@ if [[ -z "$CONNECTION_STRING_TEXT" ]]; then
     exit 1
 fi
 
-echo "##vso[task.setvariable variable=CONNECTION_STRING;]'$CONNECTION_STRING_TEXT'"
+echo "##vso[task.setvariable variable=CONNECTION_STRING;issecret=true]'$CONNECTION_STRING_TEXT'"
