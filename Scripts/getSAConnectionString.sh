@@ -16,7 +16,7 @@ fi
 
 # Getting connection string
 echo "Getting Connection String for Storage Account '$STORAGE_ACCOUNT_NAME' in RG '$RESOURCE_GROUP'..."
-CONNECTION_STRING=$(az storage account show-connection-string \
+CONNECTION_STRING_TEXT=$(az storage account show-connection-string \
     --resource-group "$RESOURCE_GROUP" \
     --name "$STORAGE_ACCOUNT_NAME" \
     --query "connectionString" -o tsv)
@@ -26,4 +26,5 @@ if [[ -z "$CONNECTION_STRING" ]]; then
     exit 1
 fi
 
-echo "##vso[task.setvariable variable=CONNECTION_STRING;isOutput=true]$CONNECTION_STRING"
+echo '$CONNECTION_STRING_TEXT'
+echo "##vso[task.setvariable variable=CONNECTION_STRING;]'$CONNECTION_STRING_TEXT'"
