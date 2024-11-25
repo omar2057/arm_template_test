@@ -78,7 +78,6 @@ stages:
               inlineScript: |
                 bash $(System.DefaultWorkingDirectory)/Scripts/getSAConnectionString.sh "sa$(RESOURCES_NAMES)$(ENVIRONMENT)"
                 echo $CONNECTION_STRING
-                echo "##vso[task.setvariable variable=CONNECTION_STRING;]$CONNECTION_STRING"
 
           # 5. Create Secret if not exist
           - task: AzureCLI@2

@@ -26,6 +26,4 @@ if [[ -z "$CONNECTION_STRING" ]]; then
     exit 1
 fi
 
-# Display connection string
-echo "Connection String:"
-echo "$CONNECTION_STRING"
+echo "##vso[task.setvariable variable=CONNECTION_STRING]$CONNECTION_STRING"
