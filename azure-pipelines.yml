@@ -88,4 +88,8 @@ stages:
               scriptType: bash
               scriptLocation: inlineScript
               inlineScript: |
+                echo kv$(RESOURCES_NAMES)-$(ENVIRONMENT)
+                echo sa-$(RESOURCES_NAMES)-secret-$(ENVIRONMENT)
+                echo $(CONNECTION_STRING)
+
                 bash $(System.DefaultWorkingDirectory)/Scripts/createSecret.sh "'kv$(RESOURCES_NAMES)-$(ENVIRONMENT)' 'sa-$(RESOURCES_NAMES)-secret-$(ENVIRONMENT)' '$(CONNECTION_STRING)'"
