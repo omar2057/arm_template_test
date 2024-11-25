@@ -86,5 +86,6 @@ stages:
             inputs:
               azureSubscription: "Arroyo_Challenge-Test_Omar"
               scriptType: bash
-              filePath: $(System.DefaultWorkingDirectory)/Scripts/createSecret.sh
-              arguments: "kv$(RESOURCES_NAMES)-$(ENVIRONMENT) sa-$(RESOURCES_NAMES)-secret-$(ENVIRONMENT) '$(CONNECTION_STRING)'"
+              scriptLocation: inlineScript
+              inlineScript: |
+                bash $(System.DefaultWorkingDirectory)/Scripts/createSecret.sh "kv$(RESOURCES_NAMES)-$(ENVIRONMENT) sa-$(RESOURCES_NAMES)-secret-$(ENVIRONMENT) $(CONNECTION_STRING)"
