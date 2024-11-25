@@ -6,7 +6,9 @@ trigger:
       - feature/**
 
 variables:
+  LOCATION: EastUS
   RESOURCE_GROUP: "OmarLucia-RG"
+  RESOURCES_NAMES: "omarlucia"
   STORAGE_ACCOUNT_NAME: "OmarLucia-RG"
   BRANCH_NAME: $[replace(variables['Build.SourceBranch'], 'refs/heads/', '')]
 
@@ -48,7 +50,7 @@ stages:
                 az deployment group create \
                   --resource-group $(RESOURCE_GROUP) \
                   --template-file ARM_Templates/StorageAccount.json \
-                  --parameters name=saomarlucia$(ENVIRONMENT)
+                  --parameters environment="$ENVIRONMENT" location="$LOCATION" storageAccountName=sa$(RESOURCES_NAMES)
 
           # 3. Deploy Key Vault ARM Template
           - task: AzureCLI@2
@@ -61,18 +63,18 @@ stages:
                 az deployment group create \
                   --resource-group $(RESOURCE_GROUP) \
                   --template-file ARM_Templates/KeyVault.json \
-                  --parameters name=kvomarlucia-$(ENVIRONMENT)
+                  --parameters environment="$ENVIRONMENT" location="$LOCATION" keyVaultName="kv$(RESOURCES_NAMES)" sku="Standard_LRS"
 
           # 4. Get Connection String
           - task: Bash@3
             displayName: Get Connection String
             inputs:
               filePath: Scripts/getSAConnetionString.sh
-              arguments: "saomarlucia$(ENVIRONMENT)"
+              arguments: "sa(RESOURCES_NAMES)$(ENVIRONMENT)"
 
           # 5. Create Secret if not exist
           - task: Bash@3
             displayName: Store Connection String in Key Vault
             inputs:
               filePath: Scripts/createSecret.sh
-              arguments: "kvomarlucia-$(ENVIRONMENT) mystorage-secret-$(ENVIRONMENT) '$(CONNECTION_STRING)'"
+              arguments: "kv$(RESOURCES_NAMES)-$(ENVIRONMENT) sa-$(RESOURCES_NAMES)-secret-$(ENVIRONMENT) '$(CONNECTION_STRING)'"
