@@ -6,4 +6,4 @@ account_replication_type = "LRS"
 
 # KeyVault
 sku_name = "standard"
-object_id = ""
+object_id = "" # need to fill before terraform apply
